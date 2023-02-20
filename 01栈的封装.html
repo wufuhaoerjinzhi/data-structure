@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function Stack() {
+        // 栈的属性
+        this.items = [];
+        // 栈的相关操作
+
+        // 1. 压栈
+        // 方法一：给对象实例添加方法
+        // this.push = function () {};
+        // 方法二：给整个对象添加方法（推荐）
+        Stack.prototype.push = (element) => {
+          this.items.push(element);
+        };
+        // 2.出栈
+        Stack.prototype.pop = () => {
+          return this.items.pop();
+        };
+        // 3. 查看栈顶元素
+        Stack.prototype.peek = () => {
+          return this.items[this.items?.length - 1];
+        };
+        // 4.判断栈是否为空
+        Stack.prototype.isEmpty = () => {
+          return this.items.isEmpty();
+          // this.item?.length===0
+        };
+        // 5. 获取栈中元素个数
+        Stack.prototype.size = () => {
+          return this.items.length;
+        };
+        // 6 .toString
+        Stack.prototype.toString = () => {
+          // const result =
+          return this.items.map((i) => {
+            return i + "";
+          });
+          // return this.item.toString();
+        };
+      }
+
+      var s = new Stack();
+      s.push(20);
+      s.push(40);
+      s.push(250);
+      s.push(70);
+
+      // s.pop();
+
+      console.log(s.toString());
+    </script>
+  </body>
+</html>
