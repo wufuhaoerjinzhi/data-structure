@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function PriorityQueue() {
+        // 内部类
+        function QueueElement(element, priority) {
+          this.element = element;
+          this.priority = priority;
+        }
+
+        // 封装属性
+        this.items = [];
+        // 1、实现插入方法
+        PriorityQueue.prototype.enqueue = (element, priority) => {
+          let queueElement = new QueueElement(element, priority);
+
+          //第一种情况，里面没值，直接插入
+          if (this.items?.length === 0) {
+            this.items.push(queueElement);
+          } else {
+            var added = false;
+            for (var i = 0; i < this.items?.length; i++) {
+              if (queueElement.priority < this.items[i].priority) {
+                this.items.splice(i, 0, queueElement);
+                added = true;
+                break; // 如果已经插入，不需要for循环
+              }
+            }
+            if (!added) {
+              this.items.push(queueElement);
+            }
+          }
+        };
+        PriorityQueue.prototype.toString = () => {
+          let resultString = "";
+          for (var i = 0; i < this.items.length; i++) {
+            resultString +=
+              this.items[i].element + "-" + this.items[i].priority + ";";
+          }
+          return resultString;
+        };
+      }
+      // 测试
+      var pq = new PriorityQueue();
+      pq.enqueue("abc", 111);
+      pq.enqueue("bcd", 200);
+      pq.enqueue("efg", 50);
+      pq.enqueue("xyz", 66);
+      console.log(pq.toString(), "pq");
+    </script>
+  </body>
+</html>

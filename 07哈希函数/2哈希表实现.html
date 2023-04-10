@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <script>
+
+    function HashTable () {
+      // 1、属性
+      this.storage = [] // 数组，放所有的元素
+      this.count = 0 // 记录已经存放元素个数
+      //loadFactor>0.75扩容；<0.25减小容量
+      this.limit = 7 // 哈希表(数组)总长度
+
+      // 2、哈希函数
+      HashTable.prototype.hashFunc = function (str, size) {
+        var hashCode = 0
+        for (var i = 0; i < str.length; i++) {
+          hashCode = 37 * hashCode + str.charCodeAt(i)
+        }
+        index = hashCode % size
+        return index
+      }
+
+      // 3、方法一：插入&&修改
+      HashTable.prototype.put = function (key, value) {
+        // 3.1 根据key获取索引值index，目的：将数据插入到对应位置
+        var index = this.hashFunc(key, this.limit)
+        //  3.2 根据索引值index，取出bucket(桶:第二级数组)
+        var bucket = this.storage[index]
+        //    3.2.1 如果桶不存在，创建桶，并且放置该索引的位置
+        if (!bucket || !bucket?.length) {
+          bucket = []
+          this.storage[index] = bucket
+        }
+        //  3.3 判断是新增还是修改值，需要遍历。
+        //      如果有值了，就是修改；如果没有，执行添加操作
+        for (var i = 0; i < bucket?.length; i++) {
+          // 修改操作
+          if (bucket[i][0] === key) {
+            bucket[i][1] = value
+            return
+          }
+        }
+        //  3.4 新增操作
+        bucket.push([key, value])
+        this.count += 1
+
+        // 判断是否扩容
+        if (this.count > this.limit * 0.75) {
+
+          var newTempLimit = getPrime(this.limit * 2)
+          this.resize(newTempLimit)
+        }
+
+      }
+
+
+      // 4、方法二：根据key获取value方法
+      HashTable.prototype.get = function (key) {
+        // 1、根据key获取的index
+        var index = this.hashFunc(key, this.limit)
+        // 2、根据index获取对应的痛
+        var bucket = this.storage[index]
+        if (!bucket || !bucket?.length) { return null }
+        // 3、有值，进行线性循环
+        for (var i = 0; i < bucket?.length; i++) {
+          if (bucket[i][0] === key) {
+            return bucket[i][1]
+          }
+        }
+        return null
+
+      }
+
+      // 5、删除
+      HashTable.prototype.delete = function (key) {
+        // 1、根据key获取的index
+        var index = this.hashFunc(key, this.limit)
+        // 2、根据index获取对应的痛
+        var bucket = this.storage[key]
+        if (!bucket || !bucket?.length) { return null }
+        // 3、有值，进行线性循环
+        for (var i = 0; i < bucket?.length; i++) {
+          if (bucket[i][0] === key) {
+            bucket.splice(i, 1)
+            this.count--
+            return bucket[i][1]
+
+            // 缩小容量
+            if (this.limit > 7 && this.count < this.limit * 0.25) {
+              var newTempLimit = getPrime(Math.floor(this.limit / 2))
+              this.resize(newTempLimit)
+            }
+          }
+        }
+        return null
+      }
+
+      // 6、判断hash表是否为空
+      HashTable.prototype.isEmpty = function () {
+        return this.count === 0
+      }
+
+      // 7、获取hash表元素个数
+      HashTable.prototype.isEmpty = function () {
+        return this.count
+      }
+      // 8、扩容
+      HashTable.prototype.resize = function (newLimit) {
+        // 1、保存旧的数组内容
+        var oldStorage = this.storage
+        // 2、重置
+        this.storage = []
+        this.count = 0
+        this.limit = newLimit
+        // 3、遍历oldStorage中所有的bucket
+        for (var i = 0; i < oldStorage?.length; i++) {
+          // 4、取出bucket
+          var bucket = oldStorage[i]
+          // 5、判断bucket是否为null
+          if (!bucket || bucket?.length) { continue }
+          // 5、bucket有数据，重新插入新的storage中
+          for (var j = 0; j < bucket?.length; j++) {
+            this.put(bucket[j][0], bucket[j][1])
+          }
+        }
+
+
+      }
+
+
+      // 9 判断某个数字是不是质数
+      HashTable.prototype.isPrime = function (num) {
+        var temp = parseInt(Math.sqrt(num))
+        for (var i = 2; i <= temp; i++) {
+          if (num % i === 0) {
+            return false
+          }
+        }
+        return true
+      }
+
+      // 9 判断某个数字是不是质数
+      HashTable.prototype.getPrime = function (num) {
+
+        while (!this.isPrime(num)) {
+          num++
+        }
+        return num
+      }
+    }
+
+    var ht = new HashTable()
+    ht.put("abd", "123")
+    ht.put("cba", "321")
+    ht.put("nbd", "521")
+    ht.put("mba", "520")
+    // 获取
+    alert(ht.get("abd"))
+    // 修改
+    alert(ht.put("cba", '333'))
+    alert(ht.get("cba"))
+
+    // 删除
+    alert(ht.delete("mba"))
+  </script>
+</body>
+
+</html>

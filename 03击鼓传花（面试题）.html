@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function Queue() {
+        this.item = [];
+
+        // 1、将元素加入队列中
+        Queue.prototype.enqueue = (element) => {
+          this.item.push(element);
+        };
+        // 2、移除队列的第一个元素，并返回被移除的元素
+        Queue.prototype.dequeue = () => {
+          return this.item.shift();
+        };
+        // 3、返回队列第一个元素
+        Queue.prototype.front = () => {
+          return this.item[0];
+        };
+        // 4、如果队列中不包含任何元素，返回true
+        Queue.prototype.isEmpty = () => {
+          return this.item?.length === 0;
+        };
+        //
+        Queue.prototype.size = () => {
+          return this.item?.length;
+        };
+        //
+        Queue.prototype.toString = () => {
+          let result = "";
+          this.item.forEach((i) => {
+            console.log(i);
+            result = result + i;
+          });
+          return result;
+        };
+      }
+
+      const s = new Queue();
+
+      // 击鼓传花 P17
+      const passGame = (nameList, num) => {
+        // 创建一个队列
+        const queue = new Queue();
+        // 把人加入队列中
+        for (var i = 0; i < nameList.length; i++) {
+          queue.enqueue(nameList[i]);
+        }
+        while (queue.size() > 1) {
+          // 开始数数字，不是num时，重新加入队伍
+          for (var i = 0; i < num - 1; i++) {
+            queue.enqueue(queue.dequeue());
+          }
+          //是num的时候，删除
+          queue.dequeue();
+        }
+        // 获取剩下的那个人
+        var endName = queue.front();
+        console.log(endName, "endName");
+        console.log(nameList.indexOf(endName), "index");
+      };
+
+      passGame(["Lily", "Lucy", "Tom", "LiLei", "why"], 3);
+    </script>
+  </body>
+</html>

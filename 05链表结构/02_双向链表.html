@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+
+    function DoublyLinkedList () {
+      // 内部类
+      function Node (data) {
+        this.data = data
+        this.prev = null
+        this.next = null
+      }
+      // 属性
+      this.head = null
+      this.tail = null
+      this.length = 0
+      // 方法
+
+      // 方法一：append方法
+      DoublyLinkedList.prototype.append = (data) => {
+        var newNode = new Node(data);
+        // 情况1:没有数据
+        if (this.length === 0) {
+          this.head = newNode;
+          this.tail = newNode
+        } else {
+          // 秒！
+          newNode.prev = this.tail
+          this.tail.next = newNode
+          this.tail = newNode
+        }
+        this.length += 1
+      }
+      // 方法二：toString方法
+      DoublyLinkedList.prototype.toString = () => {
+        return this.backwardString()
+      }
+      // 方法三：forwardString方法(向前遍历)
+      DoublyLinkedList.prototype.forwardString = () => {
+        var current = this.tail
+        var linkString = "";
+        while (current) {
+          linkString += current.data + ' '
+          current = current.prev
+
+        }
+        return linkString
+      }
+      // 方法四：backwardString方法(向后遍历)
+      DoublyLinkedList.prototype.backwardString = () => {
+        var current = this.head
+        var linkString = "";
+        while (current) {
+          linkString += current.data + ' '
+          current = current.next
+
+        }
+        return linkString
+      }
+      // 方法五：insert
+      DoublyLinkedList.prototype.insert = (position, data) => {
+        // 1、越界判断
+        if (position < 0 || position > this.length) return false
+        // 2、创建变量
+        var newNode = new Node(data)
+        // 3.1判断原来的列表是否为空 || 最后追加
+        if (this.length === 0 || position === this.length) {
+          this.append(data)
+        } else {
+          // 3.2  判断position是否为0 画图，看视频P38
+          if (position === 0) {
+            newNode.next = this.head
+            this.head.prev = newNode
+            this.head = newNode
+          } else {
+            //3.3 插在中间
+            var current = this.head
+            var index = 0
+            while (index++ < position) {
+              current = current.next
+            }
+            newNode.prev = current.prev
+            newNode.next = current
+            // 注意顺序
+            current.prev.next = newNode
+            current.prev = newNode
+          }
+          this.length += 1
+        }
+        return true
+      }
+      //
+    }
+
+    // 测试
+    var testList = new DoublyLinkedList()
+    testList.append('abc')
+    testList.append("bcd");
+    testList.append("efg");
+    // testList.append("xyz");
+
+    testList.insert(0,'aaa')
+    testList.insert(4,'zzz')
+    testList.insert(2,'xxx')
+
+    alert(testList.backwardString())
+    alert(testList.forwardString())
+  </script>
+
+</body>
+
+</html>
